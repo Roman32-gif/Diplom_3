@@ -19,6 +19,7 @@ public class ClickingTests {
     public void clickOnPersonalAccount() {
         WebDriver driver =driverSettings.getDriver();
         MainPage mainPage = new MainPage(driver);
+        mainPage.open();
         mainPage.clickLoginAccountButtonRight();
     }
 
