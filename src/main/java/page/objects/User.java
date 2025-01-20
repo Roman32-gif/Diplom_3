@@ -1,4 +1,4 @@
-package pageObjects;
+package page.objects;
 
 public class User {
     private final String userName;

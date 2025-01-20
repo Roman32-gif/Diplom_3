@@ -1,7 +1,8 @@
-package pageObjects;
+package page.objects;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 
 public class LogInPage {
@@ -32,5 +33,21 @@ public class LogInPage {
     @Step("Нажать на кнопку восстановление пароля")
     public void clickRecoveryButton () {
         driver.findElement(recoveryLoginButton).click();
+    }
+
+    public boolean isUserLoggedIn() {
+        try {
+            return driver.findElement(By.xpath("input pr-6 pl-6 input_type_text input_size_default input_status_disabled")).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public boolean isUserNoLoggedIn() {
+        try {
+            return driver.findElement(By.xpath("//button[contains(@class, 'button_button__33qZ0 button_button_type_primary__1O7Bx button_button_size_medium__3zxIa')]")).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 }

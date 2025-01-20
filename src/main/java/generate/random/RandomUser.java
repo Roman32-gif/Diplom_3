@@ -1,6 +1,6 @@
-package GenerateRandom;
+package generate.random;
 import com.github.javafaker.Faker;
-import pageObjects.User;
+import page.objects.User;
 
 public class RandomUser {
     public static User getRandomUser () {

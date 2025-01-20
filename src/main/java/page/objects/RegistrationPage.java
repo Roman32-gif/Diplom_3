@@ -1,7 +1,8 @@
-package pageObjects;
+package page.objects;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 
 public class RegistrationPage {
@@ -45,5 +46,13 @@ public class RegistrationPage {
     @Step("Нажать на кнопку логин")
     public void clickLoginButton (){
         driver.findElement(loginButton).click();
+    }
+
+    public boolean badRegistration() {
+        try {
+            return driver.findElement(By.xpath("//*[contains(@class, 'input__error text_type_main-default')]")).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 }
