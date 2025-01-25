@@ -5,9 +5,9 @@ import page.objects.User;
 public class RandomUser {
     public static User getRandomUser () {
         Faker faker = new Faker();
-        String userName = faker.name().firstName();
-        String userEmail = faker.internet().emailAddress();
-        String userPassword = faker.internet().password();
-        return new User(userName, userEmail, userPassword);
+        String name = faker.name().firstName();
+        String email = faker.internet().emailAddress();
+        String password = faker.internet().password();
+        return new User(name, email, password);
     }
 }

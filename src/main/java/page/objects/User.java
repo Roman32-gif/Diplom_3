@@ -1,25 +1,28 @@
 package page.objects;
 
-public class User {
-    private final String userName;
-    private final String userEmail;
-    private final String userPassword;
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private static final long serialization = 1L;
+    private final String name;
+    private final String email;
+    private final String password;
 
     public User(String userName, String userEmail, String userPassword) {
-        this.userName= userName;
-        this.userEmail = userEmail;
-        this.userPassword = userPassword;
+        this.name = userName;
+        this.email = userEmail;
+        this.password = userPassword;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public String getUserPassword() {
-        return userPassword;
+    public String getPassword() {
+        return password;
     }
 }

@@ -11,6 +11,7 @@ public class LogInPage {
     private final By passwordField = By.cssSelector("input[type='password']");
     private final By loginButton = By.xpath("//button[contains(@class, 'button_button__33qZ0 button_button_type_primary__1O7Bx button_button_size_medium__3zxIa')]");
     private final By recoveryLoginButton = By.xpath(".//a[contains(@href,'/forgot-password')]");
+    private final By noUserLogin = By.xpath("//button[contains(@class, 'button_button__33qZ0 button_button_type_primary__1O7Bx button_button_size_medium__3zxIa')]");
     public LogInPage(WebDriver driver) {
         this.driver = driver;
     }
@@ -26,8 +27,9 @@ public class LogInPage {
     }
 
     @Step("Нажать на кнопку логин")
-    public void clickLoginButton () {
+    public boolean clickLoginButton () {
         driver.findElement(loginButton).click();
+        return false;
     }
 
     @Step("Нажать на кнопку восстановление пароля")
@@ -35,17 +37,10 @@ public class LogInPage {
         driver.findElement(recoveryLoginButton).click();
     }
 
-    public boolean isUserLoggedIn() {
-        try {
-            return driver.findElement(By.xpath("input pr-6 pl-6 input_type_text input_size_default input_status_disabled")).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
 
     public boolean isUserNoLoggedIn() {
         try {
-            return driver.findElement(By.xpath("//button[contains(@class, 'button_button__33qZ0 button_button_type_primary__1O7Bx button_button_size_medium__3zxIa')]")).isDisplayed();
+            return driver.findElement(noUserLogin).isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
         }

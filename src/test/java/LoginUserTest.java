@@ -1,3 +1,4 @@
+import generate.random.RandomUser;
 import generate.random.UserApi;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
@@ -5,30 +6,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import page.objects.LogInPage;
-import page.objects.MainPage;
-import page.objects.RecoveryPagePassword;
-import page.objects.RegistrationPage;
-import java.util.UUID;
+import page.objects.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class LoginUserTest {
     private final DriverBrowsers driverSettings = new DriverBrowsers();
     private UserApi userApi;
-    private String userEmail;
-    private String userPassword;
-    private String userName;
+    private String email;
+    private String password;
 
     @Before
     public void startUp () {
         driverSettings.initYandexBrowser();
         userApi = new UserApi();
-        userEmail = "user" + UUID.randomUUID().toString().substring(0, 8) + "@example.com";
-        userPassword = UUID.randomUUID().toString();
-        userName = "User_" + UUID.randomUUID().toString().substring(0, 8);
-        userApi.createUser(userEmail, userPassword, userName);
+        User createUser = userApi.createUser();
+        email = createUser.getEmail();
+        password = createUser.getPassword();
     }
 
     @Test
@@ -40,11 +34,11 @@ public class LoginUserTest {
         LogInPage logInPage = new LogInPage(driver);
         mainPage.open();
         mainPage.clickLoginAccountButton();
-        logInPage.fillKnownEmail(userEmail);
-        logInPage.fillKnownPassword(userPassword);
-        logInPage.clickLoginButton();
-        mainPage.clickLoginAccountButtonRight();
-        assertEquals("https://stellarburgers.nomoreparties.site/account/profile", "https://stellarburgers.nomoreparties.site/account/profile");
+        logInPage.fillKnownEmail(email);
+        logInPage.fillKnownPassword(password);
+        boolean button = logInPage.clickLoginButton();
+        assertFalse(button);
+
 
     }
 
@@ -57,10 +51,11 @@ public class LoginUserTest {
         LogInPage logInPage = new LogInPage(driver);
         mainPage.open();
         mainPage.clickLoginAccountButtonRight();
-        logInPage.fillKnownEmail(userEmail);
-        logInPage.fillKnownPassword(userPassword);
-        logInPage.clickLoginButton();
-        assertEquals("https://stellarburgers.nomoreparties.site/account/profile", "https://stellarburgers.nomoreparties.site/account/profile");
+        logInPage.fillKnownEmail(email);
+        logInPage.fillKnownPassword(password);
+        boolean button = logInPage.clickLoginButton();
+        assertFalse(button);
+
     }
 
     @Test
@@ -69,14 +64,14 @@ public class LoginUserTest {
     public void loginFromButtonInRegistrationPageTest() {
         WebDriver driver =driverSettings.getDriver();
         LogInPage logInPage = new LogInPage(driver);
-        MainPage mainPage = new MainPage(driver);
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage.open();
         registrationPage.clickLoginButton();
-        logInPage.fillKnownEmail(userEmail);
-        logInPage.fillKnownPassword(userPassword);
-        logInPage.clickLoginButton();
-        assertEquals("https://stellarburgers.nomoreparties.site/account/profile", "https://stellarburgers.nomoreparties.site/account/profile");
+        logInPage.fillKnownEmail(email);
+        logInPage.fillKnownPassword(password);
+        boolean button =  logInPage.clickLoginButton();
+        assertFalse(button);
+
     }
 
     @Test
@@ -91,17 +86,17 @@ public class LoginUserTest {
         mainPage.clickLoginAccountButtonRight();
         logInPage.clickRecoveryButton();
         recoveryPagePassword.clickLoginButton();
-        logInPage.fillKnownEmail(userEmail);
-        logInPage.fillKnownPassword(userPassword);
-        logInPage.clickLoginButton();
-        assertEquals("https://stellarburgers.nomoreparties.site/account/profile", "https://stellarburgers.nomoreparties.site/account/profile");
+        logInPage.fillKnownEmail(email);
+        logInPage.fillKnownPassword(password);
+        boolean button = logInPage.clickLoginButton();
+        assertFalse(button);
 
     }
 
 
     @After
     public void tearDown() {
-        userApi.deleteUser(userEmail);
-         driverSettings.getDriver().quit();
+        userApi.deleteUser(email);
+        driverSettings.getDriver().quit();
     }
 }

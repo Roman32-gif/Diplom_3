@@ -6,4 +6,5 @@ public class Config {
     public static final java.lang.String AUTHORISATION_URL = "https://stellarburgers.nomoreparties.site/api/auth/register";
     public static final java.lang.String DELETE_URL = "https://stellarburgers.nomoreparties.site/api/auth/user";
     public static final java.lang.String LOGIN_URL = "https://stellarburgers.nomoreparties.site/login";
+
 }

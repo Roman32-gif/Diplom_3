@@ -1,3 +1,4 @@
+import generate.random.RandomUser;
 import generate.random.UserApi;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
@@ -6,7 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import page.objects.RegistrationPage;
-import java.util.UUID;
+import page.objects.User;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static page.objects.Config.REGISTRATION_URL;
@@ -14,9 +16,9 @@ import static page.objects.Config.REGISTRATION_URL;
 public class RegisterNewUserTest {
     private final DriverBrowsers driverSettings = new DriverBrowsers();
     private UserApi userApi;
-    private String userEmail;
-    private String userPassword;
-    private String userName;
+    private String email;
+    private String password;
+    private String name;
 
 
 
@@ -24,9 +26,11 @@ public class RegisterNewUserTest {
     public void startUp(){
         driverSettings.initYandexBrowser();
         userApi = new UserApi();
-        userEmail = "user" + UUID.randomUUID().toString().substring(0, 8) + "@example.com";
-        userPassword = UUID.randomUUID().toString();
-        userName = "User_" + UUID.randomUUID().toString().substring(0, 8);
+        User createUser = userApi.createUser();
+        email = createUser.getEmail();
+        password = createUser.getPassword();
+        name = createUser.getName();
+
     }
 
 
@@ -37,24 +41,24 @@ public class RegisterNewUserTest {
         WebDriver driver =driverSettings.getDriver();
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage.open();
-        registrationPage.fillNameField(userName);
-        registrationPage.fillEmailField(userEmail);
-        registrationPage.fillPasswordField(userPassword);
+        registrationPage.fillNameField(name);
+        registrationPage.fillEmailField(email);
+        registrationPage.fillPasswordField(password);
         registrationPage.clickRegistrationButton();
         String currentUrl = driver.getCurrentUrl();
-        assertEquals("URL страницы после регистрации должен быть равен AUTHORISATION_URL", "https://stellarburgers.nomoreparties.site/register", currentUrl);
+        assertEquals("URL страницы после регистрации должен быть равен AUTHORISATION_URL", REGISTRATION_URL, currentUrl);
 
     }
 
     @Test
     @DisplayName("Регистрация пользователя")
-    @Description("Не успешная решистрация пользователя при вводе невалидных данных")
+    @Description("Не успешная регистрация пользователя при вводе невалидных данных")
     public void registerBadTest() {
         WebDriver driver =driverSettings.getDriver();
         RegistrationPage registrationPage = new RegistrationPage(driver);
         registrationPage.open();
-        registrationPage.fillNameField(userName);
-        registrationPage.fillEmailField(userEmail);
+        registrationPage.fillNameField(name);
+        registrationPage.fillEmailField(email);
         registrationPage.fillPasswordField("12345");
         registrationPage.clickRegistrationButton();
         assertTrue(registrationPage.badRegistration());
@@ -63,7 +67,7 @@ public class RegisterNewUserTest {
 
     @After
     public void tearDown() {
-        userApi.deleteUser(userEmail);
+        userApi.deleteUser(email);
         driverSettings.getDriver().quit();
     }
 

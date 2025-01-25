@@ -1,3 +1,4 @@
+import generate.random.RandomUser;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import org.junit.After;
@@ -10,27 +11,25 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import page.objects.LogInPage;
 import page.objects.MainPage;
 import generate.random.UserApi;
-import java.util.UUID;
+import page.objects.User;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static page.objects.Config.*;
 
 public class ClickingTests {
     private final DriverBrowsers driverSettings = new DriverBrowsers();
-     private UserApi userApi;
-    private String userEmail;
-    private String userPassword;
-    private String userName;
-
-
+    private UserApi userApi;
+    private String email;
+    private String password;
+    private static final String LOGOUT_BUTTON_XPATH = ".//button[text()=\"Выход\"]";
     @Before
     public void startUp () {
         driverSettings.initYandexBrowser();
         userApi = new UserApi();
-        userEmail = "user" + UUID.randomUUID().toString().substring(0, 8) + "@example.com";
-        userPassword = UUID.randomUUID().toString();
-        userName = "User_" + UUID.randomUUID().toString().substring(0, 8);
-        userApi.createUser(userEmail, userPassword, userName);
+        User createUser = userApi.createUser();
+        email = createUser.getEmail();
+        password = createUser.getPassword();
 
     }
 
@@ -55,8 +54,8 @@ public class ClickingTests {
         MainPage mainPage = new MainPage(driver);
         mainPage.open();
         mainPage.clickLoginAccountButtonRight();
-        logInPage.fillKnownEmail(userEmail);
-        logInPage.fillKnownPassword(userPassword);
+        logInPage.fillKnownEmail(email);
+        logInPage.fillKnownPassword(password);
         logInPage.clickLoginButton();
         mainPage.clickLoginAccountButtonRight();
         mainPage.clickOnConstructorButton();
@@ -73,8 +72,8 @@ public class ClickingTests {
         MainPage mainPage = new MainPage(driver);
         mainPage.open();
         mainPage.clickLoginAccountButtonRight();
-        logInPage.fillKnownEmail(userEmail);
-        logInPage.fillKnownPassword(userPassword);
+        logInPage.fillKnownEmail(email);
+        logInPage.fillKnownPassword(password);
         logInPage.clickLoginButton();
         mainPage.clickLoginAccountButtonRight();
         mainPage.clickOnLogo();
@@ -91,12 +90,12 @@ public class ClickingTests {
         MainPage mainPage = new MainPage(driver);
         mainPage.open();
         mainPage.clickLoginAccountButtonRight();
-        logInPage.fillKnownEmail(userEmail);
-        logInPage.fillKnownPassword(userPassword);
+        logInPage.fillKnownEmail(email);
+        logInPage.fillKnownPassword(password);
         logInPage.clickLoginButton();
         mainPage.clickLoginAccountButtonRight();
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//button[text()=\"Выход\"]")));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(LOGOUT_BUTTON_XPATH)));
         mainPage.clickButtonLogOut();
         assertTrue(logInPage.isUserNoLoggedIn());
 
@@ -104,26 +103,41 @@ public class ClickingTests {
 
     @Test
     @DisplayName("Нажатие на разные виды конструктора")
-    @Description("Успешное переходы между разделами конструкторами")
-    public void clickingBetweenTermsTest() {
+    @Description("Успешный переход между разделами конструктора к соусу")
+    public void clickingOnFillingTest() {
         WebDriver driver =driverSettings.getDriver();
         MainPage mainPage = new MainPage(driver);
         mainPage.open();
-        WebDriverWait wait = new WebDriverWait(driver, 100);
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//div[contains(@class, 'tab_tab__1SPyG  pt-4 pr-10 pb-4 pl-10 noselect')]/span[contains(@class, 'text text_type_main-default') and text() ='Соусы']")));
         mainPage.clickOnSauce();
-        WebDriverWait wait1 = new WebDriverWait(driver, 100);
-        wait1.until(ExpectedConditions.elementToBeClickable(By.xpath(".//div[contains(@class, 'tab_tab__1SPyG  pt-4 pr-10 pb-4 pl-10 noselect')]/span[contains(@class, 'text text_type_main-default') and text() ='Булки']")));
-        mainPage.clickOnBread();
-        WebDriverWait wait2 = new WebDriverWait(driver, 100);
-        wait2.until(ExpectedConditions.elementToBeClickable(By.xpath(".//div[contains(@class, 'tab_tab__1SPyG  pt-4 pr-10 pb-4 pl-10 noselect')]/span[contains(@class, 'text text_type_main-default') and text() ='Начинки']")));
+        assertTrue(mainPage.IsSauceOnMain());
+    }
+
+    @Test
+    @DisplayName("Нажатие на разные виды конструктора")
+    @Description("Успешный переход между разделами конструктора к добавкам")
+    public void clickingOnSauceTest() {
+        WebDriver driver = driverSettings.getDriver();
+        MainPage mainPage = new MainPage(driver);
+        mainPage.open();
         mainPage.clickOnFilling();
         assertTrue(mainPage.IsFillingOnMain());
     }
 
+    @Test
+    @DisplayName("Нажатие на разные виды конструктора")
+    @Description("Успешный переход между разделами конструктора к булке")
+    public void clickingOnBreadTest() {
+        WebDriver driver = driverSettings.getDriver();
+        MainPage mainPage = new MainPage(driver);
+        mainPage.open();
+        mainPage.clickOnFilling();
+        mainPage.clickOnBread();
+        assertTrue(mainPage.IsBreadOnMain());
+    }
+
     @After
     public void tearDown() {
-        userApi.deleteUser(userEmail);
+        userApi.deleteUser(email);
         driverSettings.getDriver().quit();
     }
 }

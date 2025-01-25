@@ -12,6 +12,7 @@ public class RegistrationPage {
     private final By passwordField = By.cssSelector("input[type='password']");
     private final By registrationButton = By.xpath(".//button[text()='Зарегистрироваться']");
     private final By loginButton = By.xpath(".//a[contains(@class, 'Auth_link__1fOlj')]");
+    private final By badRegistration = By.xpath("//*[contains(@class, 'input__error text_type_main-default')]");
 
     public RegistrationPage(WebDriver driver) {
         this.driver = driver;
@@ -50,7 +51,7 @@ public class RegistrationPage {
 
     public boolean badRegistration() {
         try {
-            return driver.findElement(By.xpath("//*[contains(@class, 'input__error text_type_main-default')]")).isDisplayed();
+            return driver.findElement(badRegistration).isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
         }

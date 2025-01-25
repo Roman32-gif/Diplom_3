@@ -15,6 +15,10 @@ public class MainPage {
     private final By fillingButton = By.xpath(".//div[contains(@class, 'tab_tab__1SPyG  pt-4 pr-10 pb-4 pl-10 noselect')]/span[contains(@class, 'text text_type_main-default') and text() ='Начинки']");
     private final By constructorButton = By.xpath(".//*[contains(@class, 'AppHeader_header__link__3D_hX')]");
     private final By logOutButton = By.xpath(".//button[text()=\"Выход\"]");
+    private final By breadExample = By.xpath("//div[contains(@class, 'current')]/span[contains(@class, 'text text_type_main-default') and text() ='Булки']");
+    private final By sauceExample = By.xpath("//div[contains(@class, 'current')]/span[contains(@class, 'text text_type_main-default') and text() ='Соусы']");
+    private final By fillingExample = By.xpath("//div[contains(@class, 'current')]/span[contains(@class, 'text text_type_main-default') and text() ='Начинки']");
+
 
     public MainPage(WebDriver driver) {
         this.driver = driver;
@@ -66,9 +70,27 @@ public class MainPage {
         driver.findElement(logOutButton).click();
     }
 
+
     public boolean IsFillingOnMain() {
         try {
-            return driver.findElement(By.xpath("//*[contains(@class, 'BurgerIngredient_ingredient__text__yp3dH') and text()='Филе Люминесцентного тетраодонтимформа']")).isDisplayed();
+            return driver.findElement(fillingExample).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public boolean IsBreadOnMain() {
+        try {
+            return driver.findElement(breadExample).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+
+    public boolean IsSauceOnMain() {
+        try {
+            return driver.findElement(sauceExample).isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
         }
